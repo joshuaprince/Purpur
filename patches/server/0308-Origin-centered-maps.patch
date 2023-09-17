@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Joshua Prince <joshua@jtprince.com>
+Date: Sun, 17 Sep 2023 13:31:51 -0700
+Subject: [PATCH] Origin-centered maps
+
+
+diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+index 804c342783baccdc12e8ca49a362770e31596f6a..2bd5eab71f813dc6af5c553b37f20de784884b0f 100644
+--- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
++++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+@@ -100,12 +100,21 @@ public class MapItemSavedData extends SavedData {
+ 
+     public static MapItemSavedData createFresh(double centerX, double centerZ, byte scale, boolean showIcons, boolean unlimitedTracking, ResourceKey<Level> dimension) {
+         int i = 128 * (1 << scale);
+-        int j = Mth.floor((centerX + 64.0D) / (double) i);
+-        int k = Mth.floor((centerZ + 64.0D) / (double) i);
+-        int l = j * i + i / 2 - 64;
+-        int i1 = k * i + i / 2 - 64;
+ 
+-        return new MapItemSavedData(l, i1, scale, showIcons, unlimitedTracking, false, dimension);
++        // JTP Start - Origin-centered Maps
++        int newCenterX, newCenterZ;
++        if (scale < MAX_SCALE) {
++            // Must round to the nearest (0.5 * width * (2n+1)) for some integer n
++            newCenterX = (int) Math.round((centerX - (i >> 1)) / i) * i + (i >> 1);
++            newCenterZ = (int) Math.round((centerZ - (i >> 1)) / i) * i + (i >> 1);
++        } else {
++            // At full zoom, center must be a multiple of 2048
++            newCenterX = (int) Math.round(centerX / i) * i;
++            newCenterZ = (int) Math.round(centerZ / i) * i;
++        }
++
++        return new MapItemSavedData(newCenterX, newCenterZ, scale, showIcons, unlimitedTracking, false, dimension);
++        // JTP End - Origin-centered Maps
+     }
+ 
+     public static MapItemSavedData createForClient(byte scale, boolean locked, ResourceKey<Level> dimension) {
