@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Joshua Prince <joshua@jtprince.com>
+Date: Sun, 17 Sep 2023 15:47:49 -0700
+Subject: [PATCH] Map ID randomization
+
+
+diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapIndex.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapIndex.java
+index 3eca0b1d1407770d3986e0f09c49bc86804b604e..92d7ec0209f082cdd54024a13acd05786f860c46 100644
+--- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapIndex.java
++++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapIndex.java
+@@ -40,9 +40,31 @@ public class MapIndex extends SavedData {
+     }
+ 
+     public int getFreeAuxValueForMap() {
+-        int i = this.usedAuxIds.getInt("map") + 1;
+-        this.usedAuxIds.put("map", i);
++        // JTP Start - Map ID Randomization
++        // https://en.wikipedia.org/wiki/Linear_congruential_generator with c != 0
++        final long mod = 89991;
++        final long mult = 3334;
++        final long inc = 4673;
++        final int offset = 10008;
++
++        // Generating values in range [offset, offset+mod)
++
++        int lastUsed = this.usedAuxIds.getInt("randomizedMapLastId");
++        if (lastUsed == -1) {
++            lastUsed = offset + 1;
++        }
++        int newId = (int) (((lastUsed - offset) * mult + inc) % mod) + offset;
++        this.usedAuxIds.put("randomizedMapLastId", newId);
++
++        int prevTotal = this.usedAuxIds.getInt("randomizedMapsGenerated");
++        if (prevTotal == -1) {
++            prevTotal = 0;
++        }
++        this.usedAuxIds.put("randomizedMapsGenerated", prevTotal + 1);
++
+         this.setDirty();
+-        return i;
++
++        return newId;
++        // JTP End
+     }
+ }
