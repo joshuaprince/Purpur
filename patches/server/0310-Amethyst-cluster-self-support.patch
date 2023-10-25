@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Joshua Prince <joshua@jtprince.com>
+Date: Wed, 25 Oct 2023 00:00:29 -0700
+Subject: [PATCH] Amethyst cluster self-support
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java b/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java
+index 01b4cf48901aaac897b8def284bf3e2c1cea3570..9008fe75ba5f7d3debe0314166bb716f0067aa00 100644
+--- a/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java
+@@ -3,6 +3,8 @@ package net.minecraft.world.level.block;
+ import javax.annotation.Nullable;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Direction;
++import net.minecraft.resources.ResourceKey;
++import net.minecraft.tags.TagKey;
+ import net.minecraft.world.item.context.BlockPlaceContext;
+ import net.minecraft.world.level.BlockGetter;
+ import net.minecraft.world.level.LevelAccessor;
+@@ -63,7 +65,11 @@ public class AmethystClusterBlock extends AmethystBlock implements SimpleWaterlo
+     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+         Direction direction = state.getValue(FACING);
+         BlockPos blockPos = pos.relative(direction.getOpposite());
+-        return world.getBlockState(blockPos).isFaceSturdy(world, blockPos, direction);
++
++        // JTP Start - Amethyst self-support
++        BlockState b = world.getBlockState(blockPos);
++        return b.isFaceSturdy(world, blockPos, direction) || b.is(Blocks.AMETHYST_CLUSTER);
++        // JTP End
+     }
+ 
+     @Override
