@@ -5,10 +5,10 @@ Subject: [PATCH] Add death screen API
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index f7fd1c4d8875bb3807172c45367465c4f9962176..b6515c469ae3ff06daf631f0d5e5f792b41f8e48 100644
+index 57e6d4bc3ad37d3eb66b5b4ccbc728a6dc64b00d..692387ba5f313191ba324df666ea7086241153ee 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -3373,5 +3373,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -3377,5 +3377,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          if (this.getHandle().connection == null) return;
          this.getHandle().connection.send(new net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket(new net.minecraft.network.protocol.common.custom.GameTestClearMarkersDebugPayload()));
      }

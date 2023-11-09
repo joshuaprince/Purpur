@@ -39,7 +39,7 @@ index af712f089e7919fa0bd3946866fd3486fab19f76..9caab6541a224dc8f729a7d720eccda7
  
          return b0;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2ea0db79e2a4b23455b2b2bc345621b4a58629ab..306195a8a57dc62379ffd856b214a651fd60e483 100644
+index bf5cc18304f464aec59f3982311a0a99d9a9706b..926ba816e7bccec0d1b34c2f8fc3300be84df4c2 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -338,13 +338,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -398,10 +398,10 @@ index a6a1b57b4327f5710e9ec5ebca35a47c11751d11..097ac55028d66ef9ab430ff5dd103db6
  
                  ++j;
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 75461a983b24e399fc695322f4e396250b991c9e..3f4df62773dfe1045914325ce5bc13162192679c 100644
+index a428df846cc6f4b2168d0c3ffdba34b42734bea3..3771caa73b0b41428f3d629aca1f562df7bcfaff 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -466,20 +466,20 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -546,20 +546,20 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
      }
  
      protected void tick(BooleanSupplier shouldKeepTicking) {
@@ -427,7 +427,7 @@ index 75461a983b24e399fc695322f4e396250b991c9e..3f4df62773dfe1045914325ce5bc1316
  
      public boolean hasWork() {
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index 71bf8555b34525f0d7781d8ee8cf67e2851a71b2..75c21d0c31e484c651f6ac3ea046ac352c9a35ba 100644
+index 03bde9d1c765700c872cc592fe414eb815956e47..43a46feb5fb4bf23d71bc4f6c08caa93b1959ffc 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -279,16 +279,16 @@ public class ServerChunkCache extends ChunkSource {
@@ -504,7 +504,7 @@ index 71bf8555b34525f0d7781d8ee8cf67e2851a71b2..75c21d0c31e484c651f6ac3ea046ac35
 +            //gameprofilerfiller.push("pollingChunks"); // Purpur
              this.level.resetIceAndSnowTick(); // Pufferfish - reset ice & snow tick random
              int k = this.level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
-             boolean flag1 = level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) != 0L && worlddata.getGameTime() % level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) == 0L; // CraftBukkit
+             boolean flag1 = this.level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) != 0L && worlddata.getGameTime() % this.level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) == 0L; // CraftBukkit
  
 -            gameprofilerfiller.push("naturalSpawnCount");
 +            //gameprofilerfiller.push("naturalSpawnCount"); // Purpur
@@ -566,7 +566,7 @@ index 71bf8555b34525f0d7781d8ee8cf67e2851a71b2..75c21d0c31e484c651f6ac3ea046ac35
          }
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 68a29b818db34ef0263704d7b6d71b9a44d905e5..f86d6d6625f2ea6c4fce02fd19ffb9ac7cd64925 100644
+index d5837c675e033c7277656e026cb98d55b6668038..c3239a2823d152b8de1f760216323936c8b3a1ff 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -823,12 +823,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -591,7 +591,7 @@ index 68a29b818db34ef0263704d7b6d71b9a44d905e5..f86d6d6625f2ea6c4fce02fd19ffb9ac
          this.tickTime();
 -        gameprofilerfiller.popPush("tickPending");
 +        //gameprofilerfiller.popPush("tickPending"); // Purpur
-         //timings.scheduledBlocks.startTiming(); // Paper // Purpur
+         //this.timings.scheduledBlocks.startTiming(); // Paper // Purpur
          if (!this.isDebug()) {
              j = this.getGameTime();
 -            gameprofilerfiller.push("blockTicks");
@@ -603,7 +603,7 @@ index 68a29b818db34ef0263704d7b6d71b9a44d905e5..f86d6d6625f2ea6c4fce02fd19ffb9ac
 -            gameprofilerfiller.pop();
 +            //gameprofilerfiller.pop(); // Purpur
          }
-         //timings.scheduledBlocks.stopTiming(); // Paper // Purpur
+         //this.timings.scheduledBlocks.stopTiming(); // Paper // Purpur
  
 -        gameprofilerfiller.popPush("raid");
 +        //gameprofilerfiller.popPush("raid"); // Purpur
@@ -617,9 +617,9 @@ index 68a29b818db34ef0263704d7b6d71b9a44d905e5..f86d6d6625f2ea6c4fce02fd19ffb9ac
          //this.timings.chunkProviderTick.stopTiming(); // Paper - timings // Purpur
 -        gameprofilerfiller.popPush("blockEvents");
 +        //gameprofilerfiller.popPush("blockEvents"); // Purpur
-         //timings.doSounds.startTiming(); // Spigot // Purpur
+         //this.timings.doSounds.startTiming(); // Spigot // Purpur
          this.runBlockEvents();
-         //timings.doSounds.stopTiming(); // Spigot // Purpur
+         //this.timings.doSounds.stopTiming(); // Spigot // Purpur
          this.handlingTick = false;
 -        gameprofilerfiller.pop();
 +        //gameprofilerfiller.pop(); // Purpur
@@ -632,7 +632,7 @@ index 68a29b818db34ef0263704d7b6d71b9a44d905e5..f86d6d6625f2ea6c4fce02fd19ffb9ac
          if (flag || this.emptyTime++ < 300) {
 -            gameprofilerfiller.push("entities");
 +            //gameprofilerfiller.push("entities"); // Purpur
-             //timings.tickEntities.startTiming(); // Spigot // Purpur
+             //this.timings.tickEntities.startTiming(); // Spigot // Purpur
              if (this.dragonFight != null) {
 -                gameprofilerfiller.push("dragonFight");
 +                //gameprofilerfiller.push("dragonFight"); // Purpur
@@ -673,8 +673,8 @@ index 68a29b818db34ef0263704d7b6d71b9a44d905e5..f86d6d6625f2ea6c4fce02fd19ffb9ac
                      }
                  }
              });
-             //timings.entityTick.stopTiming(); // Spigot // Purpur
-             //timings.tickEntities.stopTiming(); // Spigot // Purpur
+             //this.timings.entityTick.stopTiming(); // Spigot // Purpur
+             //this.timings.tickEntities.stopTiming(); // Spigot // Purpur
 -            gameprofilerfiller.pop();
 +            //gameprofilerfiller.pop(); // Purpur
              this.tickBlockEntities();
@@ -778,7 +778,7 @@ index 68a29b818db34ef0263704d7b6d71b9a44d905e5..f86d6d6625f2ea6c4fce02fd19ffb9ac
  
                  while (iterator.hasNext()) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 6a97eca066c6957eefb15e8f23eb29b1781cf1a9..41bd87096ab195c56695c5c5e46dc3c75e5a9078 100644
+index a5ad9a5bf708f6ed9844c5ac42f07a34f0833e30..38eed0f72cb6247418944fdd0770e4f9bda38f9e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1237,7 +1237,7 @@ public class ServerPlayer extends Player {
@@ -811,7 +811,7 @@ index 6a97eca066c6957eefb15e8f23eb29b1781cf1a9..41bd87096ab195c56695c5c5e46dc3c7
                  this.connection.send(new ClientboundPlayerAbilitiesPacket(this.getAbilities()));
                  playerlist.sendLevelInfo(this, worldserver);
 diff --git a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
-index 0166107f8b48393a93ac046e6af70f0ff24fbb85..fa7f85303f9fe80a2e51740c376d9daedfaa60b4 100644
+index 61e794f63c6ec9b19ff0e75924470ea9a1db442e..b19c59a87d4136da583a0b687f6b27fef3456f09 100644
 --- a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 @@ -209,7 +209,7 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
@@ -1037,10 +1037,10 @@ index 2e6e8eac987c4ef6b2dcd3de592d8a51d2b29792..863343a87fe34d72f04af89d75268b47
              };
          }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad4fde00d4 100644
+index af06a919673f2e4f41d1cd712caa5b002d12ae71..5d46d35db653d58ccb850794282e8613b33e2393 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -809,7 +809,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -842,7 +842,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      // CraftBukkit end
  
      public void baseTick() {
@@ -1049,7 +1049,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
          if (firstTick && this instanceof net.minecraft.world.entity.NeutralMob neutralMob) neutralMob.tickInitialPersistentAnger(level); // Paper - Update last hurt when ticking
          this.feetBlockState = null;
          if (this.isPassenger() && this.getVehicle().isRemoved()) {
-@@ -870,7 +870,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -903,7 +903,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          }
  
          this.firstTick = false;
@@ -1058,7 +1058,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
      }
  
      public void setSharedFlagOnFire(boolean onFire) {
-@@ -1089,7 +1089,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1122,7 +1122,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  }
              }
  
@@ -1067,7 +1067,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
              if (this.stuckSpeedMultiplier.lengthSqr() > 1.0E-7D) {
                  movement = movement.multiply(this.stuckSpeedMultiplier);
                  this.stuckSpeedMultiplier = Vec3.ZERO;
-@@ -1098,7 +1098,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1131,7 +1131,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              // Paper start - ignore movement changes while inactive.
              if (isTemporarilyActive && !(this instanceof ItemEntity || this instanceof net.minecraft.world.entity.vehicle.AbstractMinecart) && movement == getDeltaMovement() && movementType == MoverType.SELF) {
                  setDeltaMovement(Vec3.ZERO);
@@ -1076,7 +1076,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
                  return;
              }
              // Paper end
-@@ -1119,8 +1119,8 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1152,8 +1152,8 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  this.setPos(this.getX() + vec3d1.x, this.getY() + vec3d1.y, this.getZ() + vec3d1.z);
              }
  
@@ -1087,7 +1087,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
              boolean flag = !Mth.equal(movement.x, vec3d1.x);
              boolean flag1 = !Mth.equal(movement.z, vec3d1.z);
  
-@@ -1139,7 +1139,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1172,7 +1172,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
              this.checkFallDamage(vec3d1.y, this.onGround(), iblockdata, blockposition);
              if (this.isRemoved()) {
@@ -1096,7 +1096,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
              } else {
                  if (this.horizontalCollision) {
                      Vec3 vec3d2 = this.getDeltaMovement();
-@@ -1277,7 +1277,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1310,7 +1310,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      this.setRemainingFireTicks(-this.getFireImmuneTicks());
                  }
  
@@ -1105,7 +1105,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
              }
          }
          // Paper start - detailed watchdog information
-@@ -3125,7 +3125,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3137,7 +3137,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  ServerLevel worldserver1 = minecraftserver.getLevel(resourcekey);
  
                  if (true && !this.isPassenger() && this.portalTime++ >= i) { // CraftBukkit
@@ -1114,7 +1114,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
                      this.portalTime = i;
                      // Paper start
                      io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), worldserver1 == null ? null : worldserver1.getWorld(), org.bukkit.PortalType.NETHER);
-@@ -3143,7 +3143,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3155,7 +3155,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      }
                      } // Paper
                      // CraftBukkit end
@@ -1123,7 +1123,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
                  }
  
                  this.isInsidePortal = false;
-@@ -3618,14 +3618,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3630,14 +3630,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          }
          // Paper end
          if (this.level() instanceof ServerLevel && !this.isRemoved()) {
@@ -1140,7 +1140,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
              PortalInfo shapedetectorshape = (location == null) ? this.findDimensionEntryPoint(worldserver) : new PortalInfo(new Vec3(location.x(), location.y(), location.z()), Vec3.ZERO, this.yRot, this.xRot, worldserver, null); // CraftBukkit
  
              if (shapedetectorshape == null) {
-@@ -3664,7 +3664,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3676,7 +3676,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  this.unRide();
                  // CraftBukkit end
  
@@ -1149,7 +1149,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
                  // Paper start - Change lead drop timing to prevent dupe
                  if (this instanceof Mob) {
                      ((Mob) this).dropLeash(true, true); // Paper drop lead
-@@ -3687,10 +3687,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3699,10 +3699,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  }
  
                  this.removeAfterChangingDimensions();
@@ -1163,7 +1163,7 @@ index 307eac4114192a7f0e6633e3df5a5e7a54ad22ba..b4255bf0fbf5599ae86cd372e5c9f1ad
              }
          } else {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e07fa7386 100644
+index b7d5c1342bf400bf0ee2a339b546bfed21189b56..a43859eeacf6743519f0076d005885c7c5331b1a 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -410,7 +410,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -1184,7 +1184,7 @@ index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e
      }
  
      public boolean canSpawnSoulSpeedParticle() {
-@@ -3162,10 +3162,10 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3159,10 +3159,10 @@ public abstract class LivingEntity extends Entity implements Attackable {
          }
  
          this.run += (f3 - this.run) * 0.3F;
@@ -1198,7 +1198,7 @@ index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e
  
          // Paper start - stop large pitch and yaw changes from crashing the server
          this.yRotO += Math.round((this.getYRot() - this.yRotO) / 360.0F) * 360.0F;
-@@ -3177,7 +3177,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3174,7 +3174,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          this.yHeadRotO += Math.round((this.yHeadRot - this.yHeadRotO) / 360.0F) * 360.0F;
          // Paper end
  
@@ -1207,7 +1207,7 @@ index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e
          this.animStep += f2;
          if (this.isFallFlying()) {
              ++this.fallFlyTicks;
-@@ -3467,19 +3467,19 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3464,19 +3464,19 @@ public abstract class LivingEntity extends Entity implements Attackable {
          }
  
          this.setDeltaMovement(d0, d1, d2);
@@ -1232,7 +1232,7 @@ index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e
          if (this.jumping && this.isAffectedByFluids()) {
              double d3;
  
-@@ -3506,8 +3506,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3503,8 +3503,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
              this.noJumpDelay = 0;
          }
  
@@ -1243,7 +1243,7 @@ index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e
          this.xxa *= 0.98F;
          this.zza *= 0.98F;
          this.updateFallFlying();
-@@ -3534,8 +3534,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3531,8 +3531,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
              this.travel(vec3d1);
          }
  
@@ -1254,7 +1254,7 @@ index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e
          if (!this.level().isClientSide && !this.isDeadOrDying() && !freezeLocked) { // Paper - Freeze Tick Lock API
              int i = this.getTicksFrozen();
  
-@@ -3552,15 +3552,15 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3549,15 +3549,15 @@ public abstract class LivingEntity extends Entity implements Attackable {
              this.hurt(this.damageSources().freeze(), 1.0F);
          }
  
@@ -1274,7 +1274,7 @@ index ffc25a5f8e8ec479a7454920ccf66ef1e4ce4f71..7a5f51c9585c280c51b4dbe5e6848d7e
          // Purpur start
          if (this.xo != this.getX() || this.yo != this.getY() || this.zo != this.getZ() || this.yRotO != this.getYRot() || this.xRotO != this.getXRot()) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 547279a379190c2339d6335e00faf7730be6d0f0..599094f231787db475882c38721b724a2e3bf41c 100644
+index 3a86686789ca77301e43bb9810f9b2b311d7763d..80c03bd4e5d7e20bb8a4e14af5620f5c57a05fd4 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -366,13 +366,13 @@ public abstract class Mob extends LivingEntity implements Targeting {
@@ -1311,7 +1311,7 @@ index 547279a379190c2339d6335e00faf7730be6d0f0..599094f231787db475882c38721b724a
      }
  
      protected Vec3i getPickupReach() {
-@@ -937,46 +937,46 @@ public abstract class Mob extends LivingEntity implements Targeting {
+@@ -935,46 +935,46 @@ public abstract class Mob extends LivingEntity implements Targeting {
              return;
          }
          // Paper end
@@ -1488,7 +1488,7 @@ index 09f796ec491f21520e1fcc454249e4696dad3b1b..9bf06cf7b3706f8883e1a0ceac8b1aeb
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java b/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java
-index 7223528b4fb2885e0f6c0df2238cada16dbed35e..61cd0e050a2784f1d59ed3c9493e2386ef5fc3bb 100644
+index 89e473aadb1ab0bd802e7f74a77cce09578320d7..7369290820f726c28c87bc63dba2a74f415bb126 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/axolotl/Axolotl.java
 @@ -320,12 +320,13 @@ public class Axolotl extends Animal implements LerpingModel, VariantHolder<Axolo
@@ -1701,7 +1701,7 @@ index 250af1ce7a93c2d2897f35c68fae319c9ba7d55d..5e66c2bd3807619cadee5b7081d93d21
          if ((this.tickCount + this.getId()) % 120 == 0) {
              Warden.applyDarknessAround(worldserver, this.position(), this, 20);
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 9682676aa68cf5927facd60ef061006579c1f893..81bb48853acb34ad2f26da43b4d81620a9bfcc4f 100644
+index c889e5e0ba42eac860d25c76e5956471eb29be7e..02df0bf09f2ef91e4dafbdcea590b4634b2abf08 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -342,7 +342,7 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
@@ -1745,7 +1745,7 @@ index 45243249a561440512ef2a620c60b02e159c80e2..b26cea981a876fd42c9ab91923d507b3
              }
  
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index fc27f690d302559dd534e9f4ede7a7bd6422837a..a90288a86b022b4f9682befcb1478671e861ca41 100644
+index 8b537022638648c11396c0ee638750c712a6230b..25540a7f5631acd856726cdb44bace9be7dab401 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -1301,9 +1301,9 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -1757,16 +1757,16 @@ index fc27f690d302559dd534e9f4ede7a7bd6422837a..a90288a86b022b4f9682befcb1478671
  
 -        gameprofilerfiller.push("blockEntities");
 +        //gameprofilerfiller.push("blockEntities"); // Purpur
-         //timings.tileEntityPending.startTiming(); // Spigot // Purpur
+         //this.timings.tileEntityPending.startTiming(); // Spigot // Purpur
          this.tickingBlockEntities = true;
          if (!this.pendingBlockEntityTickers.isEmpty()) {
 @@ -1348,7 +1348,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
-         //timings.tileEntityTick.stopTiming(); // Spigot // Purpur
+         //this.timings.tileEntityTick.stopTiming(); // Spigot // Purpur
          this.tickingBlockEntities = false;
          co.aikar.timings.TimingHistory.tileEntityTicks += this.blockEntityTickers.size(); // Paper
 -        gameprofilerfiller.pop();
 +        //gameprofilerfiller.pop(); // Purpur
-         spigotConfig.currentPrimedTnt = 0; // Spigot
+         this.spigotConfig.currentPrimedTnt = 0; // Spigot
      }
  
 @@ -1551,7 +1551,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -1819,7 +1819,7 @@ index 1e3349690d00c7889a381f7c65a3b5bf3de2ac5b..524301e2438ee2938b59eb2b2e9fc4e0
  
      // Paper start
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index ef2f9ee9f32d6a6ad7ec9385335fc368f0ecff32..220e1dbf70e7d51ea69d964eb7e84f55aa5a32d7 100644
+index 88b7f814a1454841b1f1b27e9c7d66d64717a422..66656c4cf157228c9f52b33b358713ef0172f9ff 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 @@ -457,11 +457,11 @@ public class LevelChunk extends ChunkAccess {

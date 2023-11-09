@@ -160,41 +160,23 @@ index 68e1b8271475996020af50b3b2cf04cd25aa6c85..4f2fcbcf90d6f5ee89e35c993a65cae6
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 42b336a96e5c786b95356200da7d02bfd8b584dc..f79d79d7c9ca18ac711b81c8c3d94e2145aa5bf0 100644
+index 7feff1402b3034d0f387440f28ee7a71e4ff4acf..3741993bfdf6b356619d04296c16cf2d2018e091 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 @@ -465,7 +465,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
      @Override
      public boolean addPotionEffect(PotionEffect effect, boolean force) {
          org.spigotmc.AsyncCatcher.catchOp("effect add"); // Paper
--        this.getHandle().addEffect(new MobEffectInstance(CraftPotionEffectType.bukkitToMinecraft(effect.getType()), effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon()), EntityPotionEffectEvent.Cause.PLUGIN); // Paper - Don't ignore icon
+-        this.getHandle().addEffect(CraftPotionUtil.fromBukkit(effect), EntityPotionEffectEvent.Cause.PLUGIN); // Paper - Don't ignore icon
 +        this.getHandle().addEffect(new MobEffectInstance(CraftPotionEffectType.bukkitToMinecraft(effect.getType()), effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon(), effect.getKey()), EntityPotionEffectEvent.Cause.PLUGIN); // Purpur - add key // Paper - Don't ignore icon
          return true;
      }
  
-@@ -486,7 +486,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
-     @Override
-     public PotionEffect getPotionEffect(PotionEffectType type) {
-         MobEffectInstance handle = this.getHandle().getEffect(CraftPotionEffectType.bukkitToMinecraft(type));
--        return (handle == null) ? null : new PotionEffect(CraftPotionEffectType.minecraftToBukkit(handle.getEffect()), handle.getDuration(), handle.getAmplifier(), handle.isAmbient(), handle.isVisible());
-+        return (handle == null) ? null : new PotionEffect(CraftPotionEffectType.minecraftToBukkit(handle.getEffect()), handle.getDuration(), handle.getAmplifier(), handle.isAmbient(), handle.isVisible(), handle.getKey()); // Purpur - add key
-     }
- 
-     @Override
-@@ -498,7 +498,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
-     public Collection<PotionEffect> getActivePotionEffects() {
-         List<PotionEffect> effects = new ArrayList<PotionEffect>();
-         for (MobEffectInstance handle : this.getHandle().activeEffects.values()) {
--            effects.add(new PotionEffect(CraftPotionEffectType.minecraftToBukkit(handle.getEffect()), handle.getDuration(), handle.getAmplifier(), handle.isAmbient(), handle.isVisible()));
-+            effects.add(new PotionEffect(CraftPotionEffectType.minecraftToBukkit(handle.getEffect()), handle.getDuration(), handle.getAmplifier(), handle.isAmbient(), handle.isVisible(), handle.getKey())); // Purpur - add key
-         }
-         return effects;
-     }
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
-index 5a71efd27180004ee91495d9255867dbdfa1783e..1dcc3405393d11836a21aa16e435be64c04f6e7d 100644
+index bac3a5c378054481e1a5abaec1f83afde5d64ac1..f1050bf2b9efc54a894426b08989d44566acd875 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
-@@ -43,6 +43,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+@@ -45,6 +45,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
      static final ItemMetaKey POTION_COLOR = new ItemMetaKey("CustomPotionColor", "custom-color");
      static final ItemMetaKey ID = new ItemMetaKey("id", "potion-id");
      static final ItemMetaKey DEFAULT_POTION = new ItemMetaKey("Potion", "potion-type");
@@ -202,34 +184,34 @@ index 5a71efd27180004ee91495d9255867dbdfa1783e..1dcc3405393d11836a21aa16e435be64
  
      // Having an initial "state" in ItemMeta seems bit dirty but the UNCRAFTABLE potion type
      // is treated as the empty form of the meta because it represents an empty potion with no effect
-@@ -92,7 +93,13 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
-                 boolean ambient = effect.getBoolean(AMBIENT.NBT);
-                 boolean particles = effect.contains(SHOW_PARTICLES.NBT, CraftMagicNumbers.NBT.TAG_BYTE) ? effect.getBoolean(SHOW_PARTICLES.NBT) : true;
-                 boolean icon = effect.contains(SHOW_ICON.NBT, CraftMagicNumbers.NBT.TAG_BYTE) ? effect.getBoolean(SHOW_ICON.NBT) : particles;
+@@ -97,7 +98,13 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+                 boolean ambient = effect.getBoolean(CraftMetaPotion.AMBIENT.NBT);
+                 boolean particles = effect.contains(CraftMetaPotion.SHOW_PARTICLES.NBT, CraftMagicNumbers.NBT.TAG_BYTE) ? effect.getBoolean(CraftMetaPotion.SHOW_PARTICLES.NBT) : true;
+                 boolean icon = effect.contains(CraftMetaPotion.SHOW_ICON.NBT, CraftMagicNumbers.NBT.TAG_BYTE) ? effect.getBoolean(CraftMetaPotion.SHOW_ICON.NBT) : particles;
 -                this.customEffects.add(new PotionEffect(type, duration, amp, ambient, particles, icon));
 +                // Purpur start
 +                NamespacedKey key = null;
-+                if (tag.contains(KEY.NBT)) {
-+                    key = NamespacedKey.fromString(effect.getString(KEY.NBT));
++                if (tag.contains(CraftMetaPotion.KEY.NBT)) {
++                    key = NamespacedKey.fromString(effect.getString(CraftMetaPotion.KEY.NBT));
 +                }
 +                this.customEffects.add(new PotionEffect(type, duration, amp, ambient, particles, icon, key));
 +                // Purpur end
              }
          }
      }
-@@ -139,6 +146,11 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
-                 effectData.putBoolean(AMBIENT.NBT, effect.isAmbient());
-                 effectData.putBoolean(SHOW_PARTICLES.NBT, effect.hasParticles());
-                 effectData.putBoolean(SHOW_ICON.NBT, effect.hasIcon());
+@@ -150,6 +157,11 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+                 effectData.putBoolean(CraftMetaPotion.AMBIENT.NBT, effect.isAmbient());
+                 effectData.putBoolean(CraftMetaPotion.SHOW_PARTICLES.NBT, effect.hasParticles());
+                 effectData.putBoolean(CraftMetaPotion.SHOW_ICON.NBT, effect.hasIcon());
 +                // Purpur start
 +                if (effect.hasKey()) {
-+                    effectData.putString(KEY.NBT, effect.getKey().toString());
++                    effectData.putString(CraftMetaPotion.KEY.NBT, effect.getKey().toString());
 +                }
 +                // Purpur end
                  effectList.add(effectData);
              }
          }
-@@ -200,7 +212,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+@@ -225,7 +237,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
          if (index != -1) {
              if (overwrite) {
                  PotionEffect old = this.customEffects.get(index);
@@ -239,29 +221,29 @@ index 5a71efd27180004ee91495d9255867dbdfa1783e..1dcc3405393d11836a21aa16e435be64
                  }
                  this.customEffects.set(index, effect);
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtil.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtil.java
-index 354393cbf0f113f14e936b40da56125a3130cbd9..a1ef7ecdf272546bdd76bb4b2ecd86a69c51c777 100644
+index 844fb8c662a409670f631228f687d85c5436d3dd..2bfa5908f1848702ceb42da7576a609d0928eddd 100644
 --- a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtil.java
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtil.java
-@@ -101,7 +101,7 @@ public class CraftPotionUtil {
+@@ -73,7 +73,7 @@ public class CraftPotionUtil {
  
      public static MobEffectInstance fromBukkit(PotionEffect effect) {
          MobEffect type = CraftPotionEffectType.bukkitToMinecraft(effect.getType());
--        return new MobEffectInstance(type, effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles());
-+        return new MobEffectInstance(type, effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.getKey()); // Purpur - add key
+-        return new MobEffectInstance(type, effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon()); // Paper
++        return new MobEffectInstance(type, effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon(), effect.getKey()); // Paper // Purpur - add key
      }
  
      public static PotionEffect toBukkit(MobEffectInstance effect) {
-@@ -110,7 +110,7 @@ public class CraftPotionUtil {
+@@ -82,7 +82,7 @@ public class CraftPotionUtil {
          int duration = effect.getDuration();
          boolean ambient = effect.isAmbient();
          boolean particles = effect.isVisible();
--        return new PotionEffect(type, duration, amp, ambient, particles);
-+        return new PotionEffect(type, duration, amp, ambient, particles, effect.getKey()); // Purpur - add key
+-        return new PotionEffect(type, duration, amp, ambient, particles, effect.showIcon()); // Paper
++        return new PotionEffect(type, duration, amp, ambient, particles, effect.showIcon(), effect.getKey()); // Paper // Purpur - add key
      }
  
      public static boolean equals(MobEffect mobEffect, PotionEffectType type) {
 diff --git a/src/test/java/org/bukkit/potion/PotionTest.java b/src/test/java/org/bukkit/potion/PotionTest.java
-index 70a655df7195da8e037c22064c4ebfe5d771e884..cfdf155af7ec29dd221989edbd8623d27529f9e6 100644
+index 8963d93e99bdaf719fa160c11dd5af6a1d86f9a4..d852d8b14f5000415cbb4f06601059b3934b7efc 100644
 --- a/src/test/java/org/bukkit/potion/PotionTest.java
 +++ b/src/test/java/org/bukkit/potion/PotionTest.java
 @@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
