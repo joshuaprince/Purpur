@@ -5,19 +5,10 @@ Subject: [PATCH] Amethyst cluster self-support
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java b/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java
-index 01b4cf48901aaac897b8def284bf3e2c1cea3570..9008fe75ba5f7d3debe0314166bb716f0067aa00 100644
+index 01b4cf48901aaac897b8def284bf3e2c1cea3570..9974b24f35050964346d864bb202a0c7bed7482e 100644
 --- a/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/AmethystClusterBlock.java
-@@ -3,6 +3,8 @@ package net.minecraft.world.level.block;
- import javax.annotation.Nullable;
- import net.minecraft.core.BlockPos;
- import net.minecraft.core.Direction;
-+import net.minecraft.resources.ResourceKey;
-+import net.minecraft.tags.TagKey;
- import net.minecraft.world.item.context.BlockPlaceContext;
- import net.minecraft.world.level.BlockGetter;
- import net.minecraft.world.level.LevelAccessor;
-@@ -63,7 +65,11 @@ public class AmethystClusterBlock extends AmethystBlock implements SimpleWaterlo
+@@ -63,7 +63,11 @@ public class AmethystClusterBlock extends AmethystBlock implements SimpleWaterlo
      public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
          Direction direction = state.getValue(FACING);
          BlockPos blockPos = pos.relative(direction.getOpposite());
