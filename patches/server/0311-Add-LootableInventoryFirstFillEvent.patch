@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Joshua Prince <joshua@jtprince.com>
+Date: Sun, 26 Nov 2023 20:09:36 -0800
+Subject: [PATCH] Add LootableInventoryFirstFillEvent
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+index 5408cbc21fc7577a6100b5a1ca0463e899d2df8b..32563dc05bbeb203791331fc4e02d5a22e5223ba 100644
+--- a/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
++++ b/src/main/java/com/destroystokyo/paper/loottable/PaperLootableInventoryData.java
+@@ -52,6 +52,7 @@ public class PaperLootableInventoryData {
+ 
+         // ALWAYS process the first fill or if the feature is disabled
+         if (this.lastFill == -1 || !this.lootable.getNMSWorld().paperConfig().lootables.autoReplenish) {
++            new org.purpurmc.purpur.event.LootableInventoryFirstFillEvent(player == null ? null : (Player) player.getBukkitEntity(), lootable.getAPILootableInventory()).callEvent(); // JTP
+             return true;
+         }
+ 

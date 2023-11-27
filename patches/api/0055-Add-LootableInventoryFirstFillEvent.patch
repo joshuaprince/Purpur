@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Joshua Prince <joshua@jtprince.com>
+Date: Sun, 26 Nov 2023 20:10:19 -0800
+Subject: [PATCH] Add LootableInventoryFirstFillEvent
+
+
+diff --git a/src/main/java/org/purpurmc/purpur/event/LootableInventoryFirstFillEvent.java b/src/main/java/org/purpurmc/purpur/event/LootableInventoryFirstFillEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..93175aaacfd6ddc425d520153f9b4c03a5f4cb31
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/LootableInventoryFirstFillEvent.java
+@@ -0,0 +1,42 @@
++package org.purpurmc.purpur.event;
++
++import com.destroystokyo.paper.loottable.LootableInventory;
++import org.bukkit.entity.Player;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++public class LootableInventoryFirstFillEvent extends Event {
++    @Nullable
++    private final Player player;
++    @NotNull
++    private final LootableInventory inventory;
++
++    public LootableInventoryFirstFillEvent(@Nullable Player player, @NotNull LootableInventory inventory) {
++        this.player = player;
++        this.inventory = inventory;
++    }
++
++    @Nullable
++    public Player getPlayer() {
++        return player;
++    }
++
++    @NotNull
++    public LootableInventory getInventory() {
++        return inventory;
++    }
++
++    private static final HandlerList handlers = new HandlerList();
++
++    @NotNull
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
