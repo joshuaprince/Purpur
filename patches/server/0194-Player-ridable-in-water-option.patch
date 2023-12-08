@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 17 Jul 2021 15:55:14 -0500
+Subject: [PATCH] Player ridable in water option
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index c298341a6d8e2eed900a2c5a5c9e3343c0d7810d..5f2159d405d3d5bdc01406d876d146c9bd6a3a50 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -2110,6 +2110,11 @@ public abstract class Player extends LivingEntity {
+         return this.inventory.armor;
+     }
+ 
++    @Override
++    public boolean dismountsUnderwater() {
++        return !level().purpurConfig.playerRidableInWater;
++    }
++
+     public boolean setEntityOnShoulder(CompoundTag entityNbt) {
+         if (!this.isPassenger() && this.onGround() && !this.isInWater() && !this.isInPowderSnow) {
+             if (this.getShoulderEntityLeft().isEmpty()) {
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index d9203a4cadc8a0cfa83d3c67e2c84af2e5c4a083..4df7b1af64456eb35ae3ab43adce48686b877d7b 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -396,6 +396,7 @@ public class PurpurWorldConfig {
+     public boolean playerBurpWhenFull = false;
+     public int playerPortalWaitTime = 80;
+     public int playerCreativePortalWaitTime = 1;
++    public boolean playerRidableInWater = false;
+     private void playerSettings() {
+         if (PurpurConfig.version < 19) {
+             boolean oldVal = getBoolean("gameplay-mechanics.player.idle-timeout.mods-target", idleTimeoutTargetPlayer);
+@@ -420,6 +421,7 @@ public class PurpurWorldConfig {
+         playerBurpWhenFull = getBoolean("gameplay-mechanics.player.burp-when-full", playerBurpWhenFull);
+         playerPortalWaitTime = getInt("gameplay-mechanics.player.portal-wait-time", playerPortalWaitTime);
+         playerCreativePortalWaitTime = getInt("gameplay-mechanics.player.creative-portal-wait-time", playerCreativePortalWaitTime);
++        playerRidableInWater = getBoolean("gameplay-mechanics.player.ridable-in-water", playerRidableInWater);
+     }
+ 
+     private static boolean projectileDespawnRateSettingsMigrated = false;
